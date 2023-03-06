@@ -1,14 +1,18 @@
-<h1>Hello World</h1>
-<p>This is my first webpage!!</p>
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Hello World</h1>
+    <p>This is my first webpage!!</p>
 
-<!-- For Statements -->
-<h3>Pizza of my liking:</h3><br>
-{% for pizza in favourite_pizza %}
-    {{pizza}}<br/>
-{% endfor %}
-<!-- If statements -->
-{% if favourite_pizza.0=="Tandoori" %}
-    <p>{{ favourite_pizza.1 }}</p></br>
-{% else %}
-    {{favourite_pizza.0}}
-{% endif %}
+    <!-- For Statements -->
+    <h3>Pizza of my liking:</h3><br>
+    {% for pizza in favourite_pizza %}
+        {{pizza}}<br/>
+    {% endfor %}
+    <!-- If statements -->
+    {% if favourite_pizza.0=="Tandoori" %}
+        <p>{{ favourite_pizza.1 }}</p></br>
+    {% else %}
+        {{favourite_pizza.0}}
+    {% endif %}
+
+{% endblock %}

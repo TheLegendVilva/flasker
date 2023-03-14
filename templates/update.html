@@ -2,13 +2,13 @@
 {% block content %}
 {% for message in get_flashed_messages() %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>{{message}}</strong>
+        <strong>{{ message }}</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    
 {% endfor %}
+
     {% if name %}
-        <h1>User Added!!</h1></br>
+        <h1>User Updated!!</h1></br>
         <table class="table table-hover table-bordered table-striped">
             <thead>
                 <tr>
@@ -23,7 +23,7 @@
                 <tbody>
                   <tr>
                     <th scope="row">{{ our_user.id }}</th>
-                    <td><a href="{{ url_for('update',id=our_user.id) }}">{{ our_user.name }}</a></td>
+                    <td>{{ our_user.name }}</td>
                     <td>{{ our_user.email }}</td>
                   </tr>
                 </tbody>
@@ -33,44 +33,23 @@
         
         
     {% else %}
-        <h1>User List:</h1>
+        <h1>Update User....</h1>
         <div class="shadow p-3 mb-5 bg-body rounded">
-        <form method="POST">
+        <form action="/update/{{ to_update.id }}" method="POST">
             {{ form.hidden_tag() }}
             {{ form.name.label(class="form-label") }}
             
-            {{ form.name(class="form-control")}}<!-- String input field name-->
+            {{ form.name(class="form-control", value=to_update.name) }}<!-- String input field name-->
             
             <br/>
             {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control")}}<!-- String input field email-->
+            {{ form.email(class="form-control",value=to_update.email) }}<!-- String input field email-->
             </br>
             {{ form.submit(class="btn btn-dark") }}<!-- Submit button -->
         </form>
+        <table class="table table-hover table-bordered table-striped">
     </div>
     </br></br>
-
-    <table class="table table-hover table-bordered table-striped">
-    <thead>
-        <tr>
-          <th scope="col">id</th>
-          <th scope="col">name</th>
-          <th scope="col">email</th>
-          <!-- <th scope="col">Handle</th> -->
-        </tr>
-    
-        {% for our_user in our_users %}
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">{{ our_user.id }}</th>
-            <td><a href="{{ url_for('update',id=our_user.id) }}">{{ our_user.name }}</a></td>
-            <td>{{ our_user.email }}</td>
-          </tr>
-        </tbody>
-     
-    {% endfor %}
-</table>
     {% endif %}
 
 {% endblock %}

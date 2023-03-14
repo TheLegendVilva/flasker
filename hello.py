@@ -1,16 +1,26 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash,request
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import pytz
+import psycopg2
+
 
 #Create a Flask Instance
 app = Flask(__name__)
 app.config['SECRET_KEY']="INVISIBLE KEY"
-#add database
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///users.db'
+#add database with postgres
+# app.config['SQLALCHEMY_DATABASE_URI']='postgres://postgres:postgres@PostgreSQL 15/flasker'
+#SQLlite database
+# app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///users.db'
+
+#Adding Mysql database
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/db_name'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:mysql123@localhost/app_users'
+
+
 
 #Initialize the database
 db = SQLAlchemy(app)
@@ -21,6 +31,7 @@ date_time=datetime.now(tz)
 
 #Create a model
 class Users(db.Model):
+	
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(255), nullable=False)
 	email = db.Column(db.String(255), nullable=False, unique=True)
@@ -98,3 +109,30 @@ def add_user():
 		form.email.data=''
 	our_users=Users.query.order_by(Users.date_added)
 	return render_template("add_user.html",form=form,name=name,our_users=our_users)
+
+
+@app.route('/update/<int:id>',methods=['GET','POST'])
+def update(id):
+	form = UserForm()
+	to_update = Users.query.get_or_404(id)
+	if request.method=="POST":
+		to_update.name = request.form['name']
+		to_update.email = request.form['email']
+		try:
+			db.session.commit()
+			flash("User updated successfully!")
+			return render_template("update.html",form=form, to_update = to_update)
+		except:
+			flash("User not updated!")
+			return render_template("update.html",form=form, to_update = to_update)
+	else:
+		return render_template("update.html",form=form, to_update = to_update)
+
+
+
+
+
+
+
+
+
